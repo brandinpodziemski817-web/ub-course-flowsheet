@@ -88,8 +88,8 @@
       const stateFor=e=>e.kind==='coreq'?'active-co':e.to===selected?'active-pre':'active-post';
       const box=el=>{const r=el.getBoundingClientRect();return{left:r.left-rect.left,right:r.right-rect.left,top:r.top-rect.top,bottom:r.bottom-rect.top,width:r.width,height:r.height}};
       const shortestPath=(source,target,endSide)=>{
-        const sr=box(source),tr=box(target),startEdge={x:sr.right,y:sr.top+sr.height/2},endEdge={x:endSide==='right'?tr.right:tr.left,y:tr.top+tr.height/2},start={x:startEdge.x+8,y:startEdge.y},goal={x:endEdge.x+(endSide==='right'?8:-8),y:endEdge.y},pad=5;
-        const obstacles=[...board.querySelectorAll('.wsu-course,.wsu-semester')].filter(el=>el!==source&&el!==target).map(el=>{const r=box(el);return{l:r.left-pad,r:r.right+pad,t:r.top-pad,b:r.bottom+pad}});
+        const sr=box(source),tr=box(target),startEdge={x:sr.right,y:sr.top+sr.height/2},endEdge={x:endSide==='right'?tr.right:tr.left,y:tr.top+tr.height/2},port=18,start={x:startEdge.x+port,y:startEdge.y},goal={x:endEdge.x+(endSide==='right'?port:-port),y:endEdge.y};
+        const obstacles=[...board.querySelectorAll('.wsu-course,.wsu-semester')].map(el=>{const r=box(el),pad=el.classList.contains('wsu-course')?12:6;return{l:r.left-pad,r:r.right+pad,t:r.top-pad,b:r.bottom+pad}});
         const xs=[start.x,goal.x,4,rect.width-4],ys=[start.y,goal.y,4,rect.height-4];obstacles.forEach(o=>{xs.push(o.l,o.r);ys.push(o.t,o.b)});
         const uniq=a=>[...new Set(a.map(n=>Math.round(n*10)/10))].sort((a,b)=>a-b),xv=uniq(xs),yv=uniq(ys),inside=(x,y)=>obstacles.some(o=>x>o.l+.1&&x<o.r-.1&&y>o.t+.1&&y<o.b-.1),blocked=(a,b)=>obstacles.some(o=>a.y===b.y?a.y>o.t+.1&&a.y<o.b-.1&&Math.max(Math.min(a.x,b.x),o.l)<Math.min(Math.max(a.x,b.x),o.r):a.x>o.l+.1&&a.x<o.r-.1&&Math.max(Math.min(a.y,b.y),o.t)<Math.min(Math.max(a.y,b.y),o.b));
         const sx=xv.indexOf(Math.round(start.x*10)/10),sy=yv.indexOf(Math.round(start.y*10)/10),gx=xv.indexOf(Math.round(goal.x*10)/10),gy=yv.indexOf(Math.round(goal.y*10)/10),heap=[],dist=new Map(),parent=new Map(),states=new Map();
